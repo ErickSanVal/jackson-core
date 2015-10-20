@@ -85,12 +85,14 @@ public final class NumberInput
             return Integer.parseInt(s);
         }
         int num = c - '0';
+
         if (offset < len) {
             c = s.charAt(offset++);
             if (c > '9' || c < '0') {
                 return Integer.parseInt(s);
             }
             num = (num * 10) + (c - '0');
+
             if (offset < len) {
                 c = s.charAt(offset++);
                 if (c > '9' || c < '0') {
@@ -98,20 +100,19 @@ public final class NumberInput
                 }
                 num = (num * 10) + (c - '0');
                 // Let's just loop if we have more than 3 digits:
-                if (offset < len) {
-                    do {
-                        c = s.charAt(offset++);
-                        if (c > '9' || c < '0') {
-                            return Integer.parseInt(s);
-                        }
-                        num = (num * 10) + (c - '0');
-                    } while (offset < len);
+                while (offset < len) {
+                    c = s.charAt(offset++);
+                    if (c > '9' || c < '0') {
+                        return Integer.parseInt(s);
+                    }
+                    num = (num * 10) + (c - '0');
                 }
             }
+
         }
         return neg ? -num : num;
     }
-    
+
     public static long parseLong(char[] ch, int off, int len)
     {
         // Note: caller must ensure length is [10, 18]
@@ -132,7 +133,7 @@ public final class NumberInput
         // !!! TODO: implement efficient 2-int parsing...
         return Long.parseLong(s);
     }
-    
+
     /**
      * Helper method for determining if given String representation of
      * an integral number would fit in 64-bit Java long or not.
@@ -143,7 +144,7 @@ public final class NumberInput
      *    NOT passed to this method) or not
      */
     public static boolean inLongRange(char[] ch, int off, int len,
-            boolean negative)
+                                      boolean negative)
     {
         String cmpStr = negative ? MIN_LONG_STR_NO_SIGN : MAX_LONG_STR;
         int cmpLen = cmpStr.length();
@@ -259,7 +260,7 @@ public final class NumberInput
         } catch (NumberFormatException e) { }
         return def;
     }
-    
+
     public static double parseAsDouble(String s, double def)
     {
         if (s == null) { return def; }
@@ -294,7 +295,7 @@ public final class NumberInput
     public static BigDecimal parseBigDecimal(char[] b) throws NumberFormatException {
         return parseBigDecimal(b, 0, b.length);
     }
-    
+
     public static BigDecimal parseBigDecimal(char[] b, int off, int len) throws NumberFormatException {
         try { return new BigDecimal(b, off, len); } catch (NumberFormatException e) {
             throw _badBD(new String(b, off, len));
